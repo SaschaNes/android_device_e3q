@@ -23,6 +23,7 @@ $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 # AAPT
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxxhdpi
+LOCAL_CHECK_ELF_FILES := false
 
 # API levels
 BOARD_SHIPPING_API_LEVEL := 34
@@ -30,6 +31,17 @@ PRODUCT_SHIPPING_API_LEVEL := $(BOARD_SHIPPING_API_LEVEL)
 
 # No A/B
 AB_OTA_UPDATER := false
+
+# FS-Encryption
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.crypto.state=unsupported \
+    ro.crypto.encrypted=false
+
+# Deaktiviere FBE
+PRODUCT_SUPPORTS_FBE := false
+
+# Optional: Deaktiviere ForceEncryption von /data
+BOARD_ROOT_EXTRA_FSTAB := true
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -49,13 +61,13 @@ PRODUCT_PACKAGES += \
     libbatterylistener \
     libfmpal \
     libhfp_pal \
+    liblx-osal \
     libqcompostprocbundle \
     libqcomvisualizer \
     libqcomvoiceprocessing \
     libsndcardparser \
     libtinycompress \
-    libvolumelistener \
-    sound_trigger.primary.pineapple
+    libvolumelistener 
 
 AUDIO_HAL_DIR := hardware/qcom-caf/sm8650/audio/primary-hal
 AUDIO_PAL_DIR := hardware/qcom-caf/sm8650/audio/pal
@@ -324,7 +336,8 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/samsung \
     kernel/samsung/sm8650 \
-    kernel/samsung/sm8650-modules
+    kernel/samsung/sm8650-modules \
+    hardware/qcom-caf/sm8650/audio
 
 # Telephony
 PRODUCT_PACKAGES += \

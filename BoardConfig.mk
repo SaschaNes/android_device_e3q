@@ -40,6 +40,7 @@ BOARD_SUPPORTS_SOUND_TRIGGER := true
 BOARD_USES_ALSA_AUDIO := true
 TARGET_PROVIDES_AUDIO_HAL := true
 TARGET_USES_QCOM_MM_AUDIO := true
+USE_CUSTOM_AUDIO_POLICY := 1
 
 # Board
 TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
@@ -83,7 +84,9 @@ BOARD_KERNEL_CMDLINE := \
     loop.max_part=7 \
     printk.devkmsg=on \
     video=vfb:640x400,bpp=32,memsize=3072000 \
-    audit=0
+    audit=0 \
+    androidboot.forceencrypt=off \
+    androidboot.veritymode=enforcing
 
 BOARD_BOOTCONFIG := \
     androidboot.hardware=qcom \

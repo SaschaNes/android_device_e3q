@@ -86,7 +86,6 @@ vendor/lib64/libspatializerparamstorage.so
 vendor/lib64/libspeakercalibration.so
 vendor/lib64/libtensorflowlite_c.so
 vendor/lib64/libvui_intf.so
-vendor/lib64/vendor.qti.hardware.AGMIPC@1.0-impl.so
 vendor/lib64/vendor.qti.hardware.ListenSoundModel@1.0-impl.so
 vendor/lib64/vendor.qti.hardware.ListenSoundModel@1.0.so
 vendor/lib64/vendor.qti.hardware.pal@1.0-impl.so
@@ -988,7 +987,7 @@ vendor/lib64/vendor.samsung.hardware.biometrics.fingerprint-V1-ndk.so
 # Firmware
 vendor/etc/secnvm/k250a_47000400_0.img
 vendor/etc/secnvm/k250a_47000403_1.img
-vendor/etc/secnvm/k250a_47000406_f.img
+vendor/etc/secnvm/k250a_47000407_c.img
 vendor/firmware/00_generic_xtalk_shape.bin
 vendor/firmware/Data.msc
 vendor/firmware/E3_S6E3HAE_AMB681AZ01.dat
