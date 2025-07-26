@@ -1,0 +1,29 @@
+<hal format="hidl">
+    <name>android.hardware.biometrics.fingerprint</name>
+    <transport>hwbinder</transport>
+    <version>2.1</version>
+    <interface>
+        <name>IFingerprint</name>
+        <instance>default</instance>
+    </interface>
+</hal>
+
+<hal format="hidl">
+  <name>android.hardware.audio</name>
+  <transport>hwbinder</transport>
+  <version>6.0</version>
+  <interface>
+    <name>IDevice</name>
+    <instance>primary</instance>
+  </interface>
+</hal>
+
+<hal format="hidl">
+  <name>android.hardware.audio.effect</name>
+  <transport>hwbinder</transport>
+  <version>6.0</version>
+  <interface>
+    <name>IEffectsFactory</name>
+    <instance>default</instance>
+  </interface>
+</hal>

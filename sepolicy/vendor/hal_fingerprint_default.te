@@ -1,0 +1,2 @@
+# Import für uinput_device und input_device
+allow hal_fingerprint_default input_device:chr_file rw_file_perms;

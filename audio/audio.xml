@@ -1,0 +1,10 @@
+<manifest version="1.0" type="device">
+  <hal format="hidl">
+    <name>vendor.qti.hardware.pal</name>
+    <version>1.0</version>
+    <interface>
+      <name>IPAL</name>
+      <instance>default</instance>
+    </interface>
+  </hal>
+</manifest>

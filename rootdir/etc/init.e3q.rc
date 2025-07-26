@@ -49,6 +49,19 @@ on boot
     write /dev/cpuset/abnormal/cpus 0-1,5-6
     write /dev/cpuset/moderate/cpus 0-1,5-6
 
+# adb service
+service adbd /system/bin/adbd
+    class main
+    socket adbd stream 660 system system
+    disabled
+    seclabel u:r:adbd:s0
+
+on property:sys.usb.config=adb
+    start adbd
+
+on property:sys.usb.config=none
+    stop adbd
+
 # [ Permissions for Range Sensor Sensor
 # Range Sensor
     chown system radio /sys/class/sensors/range_sensor/ambient

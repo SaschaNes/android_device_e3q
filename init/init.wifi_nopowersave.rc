@@ -1,0 +1,4 @@
+on boot
+    write /sys/module/wlan/parameters/enablewow 0
+    write /sys/module/wlan/parameters/enable_wow 0
+    write /sys/module/wlan/parameters/wow_enable 0

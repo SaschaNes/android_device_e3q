@@ -55,6 +55,8 @@ on init
 
 on boot
 	setprop sys.usb.certification 0
+        setprop persist.sys.usb.config mtp,adb
+        setprop sys.usb.config mtp,adb
 
 on property:sys.usb.certification=1
     mount debugfs /sys/kernel/debug /sys/kernel/debug

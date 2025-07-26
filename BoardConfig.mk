@@ -40,6 +40,7 @@ BOARD_SUPPORTS_SOUND_TRIGGER := true
 BOARD_USES_ALSA_AUDIO := true
 TARGET_PROVIDES_AUDIO_HAL := true
 TARGET_USES_QCOM_MM_AUDIO := true
+TARGET_USES_QCOM_AGM := false
 USE_CUSTOM_AUDIO_POLICY := 1
 
 # Board
@@ -84,9 +85,7 @@ BOARD_KERNEL_CMDLINE := \
     loop.max_part=7 \
     printk.devkmsg=on \
     video=vfb:640x400,bpp=32,memsize=3072000 \
-    audit=0 \
-    androidboot.forceencrypt=off \
-    androidboot.veritymode=enforcing
+    audit=0
 
 BOARD_BOOTCONFIG := \
     androidboot.hardware=qcom \
@@ -226,6 +225,9 @@ VENDOR_SECURITY_PATCH := 2024-10-01
 
 # SEPolicy
 include device/qcom/sepolicy_vndr/SEPolicy.mk
+
+BOARD_SEPOLICY_DIRS += device/samsung/e3q/sepolicy/vendor
+
 
 # Verified Boot
 BOARD_AVB_ENABLE := true

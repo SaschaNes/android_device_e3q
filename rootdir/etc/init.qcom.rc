@@ -905,7 +905,7 @@ on charger
     write /sys/bus/platform/devices/1d84000.ufshc/auto_hibern8 2000
     #Enable UFS clock gating back
     write /sys/bus/platform/devices/1d84000.ufshc/clkgate_enable 1
-    setprop persist.sys.usb.config mass_storage
+    #setprop persist.sys.usb.config mass_storage
     start qcom-post-boot
 
 #add poweroffhandler

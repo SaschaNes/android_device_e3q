@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2024 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -20,10 +19,20 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/non_ab_device.mk)
 # Dalvik
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
+# Vendor
+PRODUCT_VENDOR_PROPERTIES += ro.vendor.product.device=pineapple
+
+# Android SDK
+PRODUCT_COMPATIBILITY_MATRIX_LEVEL := 10
+PRODUCT_SHIPPING_API_LEVEL := 35
+PRODUCT_TARGET_VNDK_VERSION := 35
+
 # AAPT
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxxhdpi
 LOCAL_CHECK_ELF_FILES := false
+
+BOARD_AVB_ENABLE := false
 
 # API levels
 BOARD_SHIPPING_API_LEVEL := 34
@@ -32,18 +41,12 @@ PRODUCT_SHIPPING_API_LEVEL := $(BOARD_SHIPPING_API_LEVEL)
 # No A/B
 AB_OTA_UPDATER := false
 
-# FS-Encryption
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.crypto.state=unsupported \
-    ro.crypto.encrypted=false
-
-# Deaktiviere FBE
-PRODUCT_SUPPORTS_FBE := false
-
-# Optional: Deaktiviere ForceEncryption von /data
-BOARD_ROOT_EXTRA_FSTAB := true
-
 # Audio
+LOCAL_MODULE := audio.primary.pineapple
+AUDIO_POLICY_CONFIGURATION_FILE += $(LOCAL_PATH)/audio/audio_policy_configuration.xml
+DEVICE_MANIFEST_FILE += $(LOCAL_PATH)/audio/manifest_audio.xml
+DEVICE_MANIFEST_FRAGMENT += $(LOCAL_PATH)/audio/audio.xml
+
 PRODUCT_PACKAGES += \
     android.hardware.audio@7.1-impl.samsung-sm8650 \
     android.hardware.audio.effect@7.0-impl \
@@ -67,18 +70,17 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing \
     libsndcardparser \
     libtinycompress \
-    libvolumelistener 
+    libvolumelistener \
+    audio.primary.pineapple\
+    vendor.qti.hardware.AGMIPC@1.0-impl
 
 AUDIO_HAL_DIR := hardware/qcom-caf/sm8650/audio/primary-hal
 AUDIO_PAL_DIR := hardware/qcom-caf/sm8650/audio/pal
 
 PRODUCT_COPY_FILES += \
-    $(AUDIO_HAL_DIR)/configs/pineapple/audio_effects.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_pineapple/audio_effects.conf \
-    $(AUDIO_HAL_DIR)/configs/pineapple/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_pineapple/audio_effects.xml \
+    $(AUDIO_HAL_DIR)/configs/pineapple/audio_effects.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.conf \
+    $(AUDIO_HAL_DIR)/configs/pineapple/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(AUDIO_HAL_DIR)/configs/pineapple/microphone_characteristics.xml:$(TARGET_COPY_OUT_VENDOR)/etc/microphone_characteristics.xml \
-    $(LOCAL_PATH)/configs/audio/audio_policy_configuration_base.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_pineapple_qssi/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/configs/audio/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
@@ -87,7 +89,8 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/android.hardware.audio.pro.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.audio.pro.xml \
-    frameworks/native/data/etc/android.software.midi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.midi.xml
+    frameworks/native/data/etc/android.software.midi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.midi.xml \
+    device/samsung/e3q/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_pineapple/audio_policy_configuration.xml
 
 # Bluetooth
 PRODUCT_COPY_FILES += \
@@ -155,6 +158,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint-service.samsung
 
+DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
+
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
 
@@ -187,6 +192,17 @@ PRODUCT_PACKAGES += \
     ipacm \
     IPACM_cfg.xml \
     IPACM_Filter_cfg.xml
+
+# MTP
+PRODUCT_COPY_FILES += \
+    device/samsung/e3q/rootdir/init.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.usb.rc
+
+TARGET_USE_USB_FUNCTION_SWITCHING := true
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp,adb \
+    sys.usb.configfs=1
+
 
 # Media
 PRODUCT_PACKAGES += \
@@ -337,7 +353,8 @@ PRODUCT_SOONG_NAMESPACES += \
     hardware/samsung \
     kernel/samsung/sm8650 \
     kernel/samsung/sm8650-modules \
-    hardware/qcom-caf/sm8650/audio
+    hardware/qcom-caf/sm8650/audio \
+    vendor/samsung/e3q
 
 # Telephony
 PRODUCT_PACKAGES += \
@@ -369,7 +386,9 @@ PRODUCT_PACKAGES += \
     android.hardware.usb-service.qti \
     android.hardware.usb.gadget-service.qti \
     init.qcom.usb.rc \
-    init.qcom.usb.sh
+    init.qcom.usb.sh 
+
+PRODUCT_HOST_PACKAGES += adbd
 
 PRODUCT_SOONG_NAMESPACES += \
     vendor/qcom/opensource/usb/etc
@@ -395,6 +414,14 @@ PRODUCT_PACKAGES += \
     libcrypto-v33
 
 # Wi-Fi
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    wifi.supplicant_scan_interval=15 \
+    ro.platform.has.supplicant=true \
+    persist.sys.wifi_sleep_policy=2
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.vendor.qcom.wlan.wow=false
+
 PRODUCT_PACKAGES += \
     android.hardware.wifi-service \
     firmware_WCNSS_qcom_cfg.ini_symlink \
@@ -413,7 +440,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml \
     frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
-    frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml
+    frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml \
+    device/samsung/e3q/init/init.wifi_nopowersave.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.wifi_nopowersave.rc
 
 # Inherit the proprietary files
 $(call inherit-product, vendor/samsung/e3q/e3q-vendor.mk)

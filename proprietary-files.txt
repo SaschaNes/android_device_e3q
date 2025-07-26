@@ -36,6 +36,7 @@ vendor/lib64/snap/libQnnHtpV75Stub.so
 vendor/lib64/snap/libQnnSystem.so
 
 # Audio
+vendor/lib64/vendor.qti.hardware.AGMIPC@1.0-impl.so
 vendor/etc/LVACFS_Calibration.dat
 vendor/etc/LVACFS_Configuration.txt
 vendor/etc/LVACFS_ControlParams.txt
@@ -983,6 +984,10 @@ vendor/lib64/libqfp_sensortest.so
 vendor/lib64/libsfp_sensor.so
 vendor/lib64/libsynaFpSensorTestNwd.so
 vendor/lib64/vendor.samsung.hardware.biometrics.fingerprint-V1-ndk.so
+vendor/lib64/fingerprint.primary.pineapple.so
+vendor/bin/hw/vendor.fingerprint.pineapple@2.1-service
+vendor/etc/init/vendor.fingerprint.pineapple@2.1-service.rc
+
 
 # Firmware
 vendor/etc/secnvm/k250a_47000400_0.img
