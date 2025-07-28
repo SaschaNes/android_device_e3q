@@ -5,18 +5,18 @@
 #
 
 # Include the common OEM chipset BoardConfig.
-include device/samsung/sm8550-common/BoardConfigCommon.mk
+include device/samsung/sm8650-common/BoardConfigCommon.mk
 
-DEVICE_PATH := device/samsung/dm3q
+DEVICE_PATH := device/samsung/e3q
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := dm3q
+TARGET_OTA_ASSERT_DEVICE := e3q
 
 # Display
-TARGET_SCREEN_DENSITY := 450
+TARGET_SCREEN_DENSITY := 600
 
 # Kernel
-TARGET_KERNEL_CONFIG := dm3q_defconfig
+TARGET_KERNEL_CONFIG := e3q_defconfig
 
 # Kernel Modules
 BOARD_RECOVERY_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/modules.load.recovery))
@@ -62,4 +62,4 @@ BOARD_SUPER_PARTITION_SIZE := 12392071168
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
 
 # Include the proprietary files BoardConfig.
-include vendor/samsung/dm3q/BoardConfigVendor.mk
+include vendor/samsung/e3q/BoardConfigVendor.mk

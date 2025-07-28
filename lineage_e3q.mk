@@ -9,20 +9,19 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 # Inherit from the device configuration.
-$(call inherit-product, device/samsung/dm3q/device.mk)
+$(call inherit-product, device/samsung/e3q/device.mk)
 
 # Inherit from the Lineage configuration.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
-PRODUCT_NAME := lineage_dm3q
-PRODUCT_DEVICE := dm3q
+PRODUCT_NAME := lineage_e3q
+PRODUCT_DEVICE := e3q
 PRODUCT_BRAND := Samsung
-PRODUCT_MODEL := SM-S918B
+PRODUCT_MODEL := SM-S928B
 PRODUCT_MANUFACTURER := Samsung
 
 PRODUCT_GMS_CLIENTID_BASE := android-samsung
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BuildDesc=$(call normalize-path-list, "dm3qxxx-user 14 UP1A.231005.007 S918BXXS7CXL2 release-keys")
-
-BUILD_FINGERPRINT := samsung/dm3qxxx/dm3q:14/UP1A.231005.007/S918BXXS7CXL2:user/release-keys
+    BuildDesc="e3qxxx-user 15 AP3A.240905.015.A2 S928BXXU4BYD9 release-keys" \
+    BuildFingerprint="samsung/e3qxxx/e3q:14/UP1A.231005.007/S928BXXU4BYD9:user/release-keys"

@@ -1,5 +1,4 @@
-
-# Copyright (c) 2019-2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2023, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -39,42 +38,26 @@ on post-fs
 on late-fs
 
 on post-fs-data
-# MST/NFC Switch
-    chown system /dev/mst_ctrl
-    chmod 0660 /dev/mst_ctrl
+# Samsung Pay
+    mkdir /efs/pfw_data 0760 vendor_spay vendor_spay
 
+# MST/NFC Switch
+    chown vendor_spay system /dev/mst_ctrl
+    chmod 0660 /dev/mst_ctrl
+    
 #mAFPC
     mkdir /efs/afc 0760 system system
     exec - system system -- /system/bin/mafpc_write
-    
+
 on boot
+    write /proc/sys/vm/swappiness 100
+
 # SDHMS Slowdown : Cpuset
-    mkdir /dev/cpuset/abnormal
-    write /dev/cpuset/abnormal/cpus 0-2
-    copy /dev/cpuset/mems /dev/cpuset/abnormal/mems
+    write /dev/cpuset/abnormal/cpus 0-1,5-6
+    write /dev/cpuset/moderate/cpus 0-1,5-6
 
-    chown system system /dev/cpuset/abnormal
-    chown system system /dev/cpuset/abnormal/tasks
-    chown system system /dev/cpuset/abnormal/cpus
-    chown system system /dev/cpuset/abnormal/cgroup.procs
-    chmod 0664 /dev/cpuset/abnormal/tasks
-    chmod 0664 /dev/cpuset/abnormal/cpus
-    chmod 0664 /dev/cpuset/abnormal/cgroup.procs
-
-    mkdir /dev/cpuset/moderate
-    write /dev/cpuset/moderate/cpus 0-2
-    copy /dev/cpuset/mems /dev/cpuset/moderate/mems
-
-    chown system system /dev/cpuset/moderate
-    chown system system /dev/cpuset/moderate/tasks
-    chown system system /dev/cpuset/moderate/cpus
-    chown system system /dev/cpuset/moderate/cgroup.procs
-    chmod 0664 /dev/cpuset/moderate/tasks
-    chmod 0664 /dev/cpuset/moderate/cpus
-    chmod 0664 /dev/cpuset/moderate/cgroup.procs
-
-    write /proc/sys/vm/swappiness 130
-    write /sys/module/zram/parameters/zram_balance_ratio 0
+# Permissions for GPU
+    chown system system /sys/kernel/gpu/gpu_info
 
 # [ Permissions for Range Sensor Sensor
 # Range Sensor
@@ -85,8 +68,10 @@ on boot
     chown system radio /sys/class/sensors/range_sensor/open_calibration
     chown system radio /sys/class/sensors/range_sensor/calibration
     chown system radio /sys/class/sensors/range_sensor/enable
+    chown system radio /sys/class/sensors/range_sensor/error
     chown system radio /sys/class/sensors/range_sensor/frame_rate
     chown system radio /sys/class/sensors/range_sensor/fw_version
+    chown system radio /sys/class/sensors/range_sensor/interrupt
     chown system radio /sys/class/sensors/range_sensor/mode
     chown system radio /sys/class/sensors/range_sensor/name
     chown system radio /sys/class/sensors/range_sensor/range_sigma
@@ -103,10 +88,7 @@ on boot
     chown system radio /sys/class/sensors/range_sensor/file_cal
     chown system radio /sys/class/sensors/range_sensor/file_p2p
     chown system radio /sys/class/sensors/range_sensor/file_shape
-    chown system radio /sys/class/sensors/range_sensor/interrupt
-    chown system radio /sys/class/sensors/range_sensor/error
 # ] Permissions for Range Sensor
-
 on shutdown
 
 # service definition
@@ -118,14 +100,10 @@ on post-fs
     mkdir /efs/carrier 0755 radio system
     chown radio system /efs/carrier
     chown radio system /efs/carrier/HiddenMenu
-
-    #permission for cache reclaim feature
-    chown system system /proc/proc_caches_reclaim
-
 # For Range Sensor
     chmod 0660 /dev/range_sensor
     chown system system /dev/range_sensor
-    mkdir /efs/range_sensor 0770 system system
+	mkdir /efs/range_sensor 0770 system system
     chown system system /efs/range_sensor/cal_data.bin
     chmod 0660 /efs/range_sensor/cal_data.bin
     chown system system /efs/range_sensor/vl53l5_cal_shape.bin
@@ -136,21 +114,6 @@ on post-fs
 # Range Sensor
 on property:sys.boot_completed=1
 	write /sys/class/sensors/range_sensor/calibration 0
-
-# Pageboostd
-on property:sys.boot_completed=1
-    start pageboostd
-
-service pageboostd /system/bin/pageboostd
-    class main
-    user system
-    group system mount radio net_bt sdcard_rw shell media media_rw
-    socket pageboostd seqpacket 0660 system system
-    disabled
-
-#Enable MGLRU
-on early-init
-    write /sys/kernel/mm/lru_gen/enabled 7
 
 # some priv-apps of DSH bind mount to DSA priv-apps
 on post-fs-data && property:ro.csc.sales_code=DSA
@@ -178,6 +141,16 @@ on post-fs-data && property:ro.csc.sales_code=DSG
     rmdir /mnt/temp1
     rmdir /mnt/temp2
 	
+# some priv-apps of DSA bind mount to DSH priv-apps
+on post-fs-data && property:ro.csc.sales_code=DSH
+    umount /system/carrier
+    mkdir /mnt/temp
+    mount none /system/carrier/DSA /mnt/temp bind
+    mount none /system/carrier/DSH /system/carrier bind
+    mount none /mnt/temp/priv-app/Opportunistic /system/carrier/priv-app/Opportunistic bind
+    umount /mnt/temp
+    rmdir /mnt/temp	
+
 # some priv-apps of TMB bind mount to ASR priv-apps
 on post-fs-data && property:ro.csc.sales_code=ASR
     umount /system/carrier
@@ -199,12 +172,13 @@ on post-fs-data && property:ro.csc.sales_code=TMK
     umount /mnt/temp
     rmdir /mnt/temp
 
-# some priv-apps of DSA bind mount to DSH priv-apps
-on post-fs-data && property:ro.csc.sales_code=DSH
-    umount /system/carrier
-    mkdir /mnt/temp
-    mount none /system/carrier/DSA /mnt/temp bind
-    mount none /system/carrier/DSH /system/carrier bind
-    mount none /mnt/temp/priv-app/Opportunistic /system/carrier/priv-app/Opportunistic bind
-    umount /mnt/temp
-    rmdir /mnt/temp
+# Pageboostd
+on property:sys.boot_completed=1
+    start pageboostd
+
+service pageboostd /system/bin/pageboostd
+    class main
+    user system
+    group system mount radio net_bt sdcard_rw shell media media_rw
+    socket pageboostd seqpacket 0660 system system
+    disabled
