@@ -125,8 +125,8 @@ vendor/lib64/camera/components/com.ss.stats.aec.so
 vendor/lib64/camera/components/com.ss.stats.af.so
 vendor/lib64/camera/components/com.ss.stats.awb.so
 vendor/lib64/camera/components/com.ss.stats.pdlib.so
-vendor/lib64/camera/components/libTsAeFront_e3.so
-vendor/lib64/camera/components/libTsAe_e3.so
+vendor/lib64/camera/components/libTsAeFront_e3.so;FIX_SONAME
+vendor/lib64/camera/components/libTsAe_e3.so;FIX_SONAME
 vendor/lib64/camera/components/libdepthmapwrapper_secure.so
 vendor/lib64/camera/t_t10_dual_calibration.bin
 vendor/lib64/camera/uw_dual_calibration.bin
@@ -165,7 +165,7 @@ vendor/lib64/hw/com.qti.chi.offline.so
 vendor/lib64/hw/com.qti.chi.override.so
 vendor/lib64/libPdSdCore.so
 vendor/lib64/libSWB.camera.samsung.so
-vendor/lib64/libTsAf_E123Q.so
+vendor/lib64/libTsAf_E123Q.so;FIX_SONAME
 vendor/lib64/libTsAwbFront_E123.so
 vendor/lib64/libTsAwb_E3.so
 vendor/lib64/libcamerapostproc.so

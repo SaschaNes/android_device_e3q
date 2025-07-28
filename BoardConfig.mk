@@ -7,7 +7,9 @@
 # Include the common OEM chipset BoardConfig.
 include device/samsung/sm8650-common/BoardConfigCommon.mk
 
+
 DEVICE_PATH := device/samsung/e3q
+ALLOW_MISSING_DEPENDENCIES=true
 
 # Assert
 TARGET_OTA_ASSERT_DEVICE := e3q
