@@ -16,7 +16,28 @@ TARGET_SCREEN_WIDTH := 1440
 
 # Init
 PRODUCT_PACKAGES += \
-    init.e3q.rc
+    init.e3q
+
+PRODUCT_PACKAGES := $(filter-out \
+    libkeymint \
+    libkeymint_support \
+    libkm_compat \
+    android.hardware.security.keymint-service.default \
+, $(PRODUCT_PACKAGES))
+
+SOONG_CONFIG_NAMESPACES += android_keymint
+SOONG_CONFIG_android_keymint := exclude
+SOONG_CONFIG_android_keymint_exclude := true
+
+#PRODUCT_PACKAGES := $(filter-out android.hardware.security.keymint-service, $(PRODUCT_PACKAGES))
+
+#PRODUCT_PACKAGES_REMOVE += \
+#    android.hardware.security.keymint-service \
+#    android.hardware.security.keymint-service.rc
+
+PRODUCT_COPY_FILES_REMOVE += \
+    hardware/interfaces/security/keymint/aidl/default/android.hardware.security.keymint-service.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/android.hardware.security.keymint-service.rc
+
 
 # Namespaces
 PRODUCT_SOONG_NAMESPACES += \

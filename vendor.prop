@@ -1,6 +1,2 @@
-# Fingerprint
-ro.vendor.fingerprint.type=udfps
-ro.vendor.fingerprint.sensor_location=720|2350|91
-
 # Radio
 ro.radio.noril=no

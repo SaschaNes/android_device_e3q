@@ -4,7 +4,7 @@
 //
 
 prebuilt_etc {
-    name: "init.e3q.rc",
+    name: "init.e3q",
     src: "init.e3q.rc",
     sub_dir: "init/hw",
     vendor: true,

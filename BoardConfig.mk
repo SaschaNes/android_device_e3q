@@ -18,6 +18,7 @@ TARGET_OTA_ASSERT_DEVICE := e3q
 TARGET_SCREEN_DENSITY := 600
 
 # Kernel
+TARGET_KERNEL_SOURCE := kernel/samsung/sm8650
 TARGET_KERNEL_CONFIG := \
     gki_defconfig \
     vendor/pineapple_GKI.config \
@@ -72,6 +73,11 @@ TARGET_KERNEL_EXT_MODULES := \
 
 # Vendor props
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
+
+# Keymint
+SOONG_CONFIG_NAMESPACES += android_keymint
+SOONG_CONFIG_android_keymint := exclude
+SOONG_CONFIG_android_keymint_exclude := true
 
 # Include the proprietary files BoardConfig.
 include vendor/samsung/e3q/BoardConfigVendor.mk
